@@ -78,7 +78,7 @@ Add an intent filter to receive NFC tag intents in your Activity:
 Add the package via Xcode's package manager using the source repository URL:
 
 ```
-https://github.com/steadysense/nfctlog-mobile
+https://github.com/steadysense/nfctlog-mobile-release
 ```
 
 Before using NFC, complete the following setup:
