@@ -2,7 +2,7 @@
 
 Android and iOS library for integrating SteadySense temperature sensor patches into third-party applications.
 
-The library is written in Kotlin Multiplatform. Both the Android artifacts (AAR, via GitHub Packages) and the iOS XCFramework (via Swift Package Manager) are distributed from **this** repository — the `Package.swift` and the XCFramework release asset live here.
+The library is written in Kotlin Multiplatform. The Android artifacts (AAR) are published via GitHub Packages, and the iOS XCFramework is distributed via Swift Package Manager.
 
 ---
 
