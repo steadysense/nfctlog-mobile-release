@@ -2,7 +2,7 @@
 
 Android and iOS library for integrating SteadySense temperature sensor patches into third-party applications.
 
-The library is written in Kotlin Multiplatform. Android artifacts (AAR) are published to this repository. iOS artifacts (XCFramework) are distributed via Swift Package Manager from the [nfctlog-mobile](https://github.com/steadysense/nfctlog-mobile) repository.
+The library is written in Kotlin Multiplatform. Both the Android artifacts (AAR, via GitHub Packages) and the iOS XCFramework (via Swift Package Manager) are distributed from **this** repository — the `Package.swift` and the XCFramework release asset live here.
 
 ---
 
