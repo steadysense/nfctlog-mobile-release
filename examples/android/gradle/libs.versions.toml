@@ -1,0 +1,69 @@
+[versions]
+# Build
+android-gradle-plugin = "8.3.2"
+kotlin = "2.0.20"
+compileSdk = "34"
+minSdk = "23"
+targetSdk = "34"
+
+# nfctlog (published Android AAR — see app/build.gradle.kts)
+nfctlog = "0.4.3"
+
+# App dependencies
+androidx-core = "1.13.1"
+androidx-lifecycle = "2.8.6"
+androidx-constraintlayout = "2.1.4"
+androidx-appcompat = "1.7.0"
+androidx-vectordrawable = "1.2.0"
+android-material = "1.12.0"
+compose = "1.7.4"
+android-desugaring = "2.1.2"
+kotlinx-datetime = "0.5.0"
+kotlinx-serialization = "1.6.3"
+
+[libraries]
+androidx-core = { module = "androidx.core:core-ktx", version.ref = "androidx-core" }
+androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
+androidx-lifecycle-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintlayout" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
+androidx-vector = { module = "androidx.vectordrawable:vectordrawable", version.ref = "androidx-vectordrawable" }
+androidx-vector-animated = { module = "androidx.vectordrawable:vectordrawable-animated", version.ref = "androidx-vectordrawable" }
+android-material = { module = "com.google.android.material:material", version.ref = "android-material" }
+compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
+compose-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
+compose-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
+compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
+compose-material = { module = "androidx.compose.material:material", version.ref = "compose" }
+compose-animation-graphics = { module = "androidx.compose.animation:animation-graphics", version.ref = "compose" }
+compose-activity = { module = "androidx.activity:activity-compose", version.ref = "compose" }
+android-desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "android-desugaring" }
+kotlinx-dateTime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+
+[bundles]
+app-ui = [
+    "androidx-core",
+    "androidx-lifecycle-runtime",
+    "androidx-lifecycle-viewmodel",
+    "androidx-lifecycle-compose",
+    "androidx-constraintlayout",
+    "androidx-vector",
+    "androidx-vector-animated",
+    "compose-animation-graphics",
+    "android-material",
+    "androidx-appcompat",
+    "compose-ui",
+    "compose-tooling",
+    "compose-tooling-preview",
+    "compose-foundation",
+    "compose-material",
+    "compose-activity",
+]

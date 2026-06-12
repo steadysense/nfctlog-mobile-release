@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nfc_not_available">NFC ist nicht verfügbar. Sie können mit diesem Gerät keine SteadySense-Patches testen. Dennoch können Sie UI-Tests mit gefälschten Patches durchführen</string>
+    <string name="nfc_disabled">NFC nicht aktiviert</string>
+    <string name="nfc_can_be_activated">Bitte aktivieren Sie die NFC-Funktion auf Ihrem Gerät.</string>
+    <string name="nfc_available_launch_text">NFC verfügbar. Platziere den NFC-Bereich deines Gerätes auf dem Patch</string>
+    <string name="nfc_tag_not_supported">Nicht kompatibler Patch: Ein Fehler ist beim Verarbeiten dieses NFC-Tags aufgetreten. Versuchen Sie es erneut mit einem anderen NFC-Tag.</string>
+    <string name="open_settings">Einstellungen öffnen</string>
+    <string name="on_patch_activated">Patch erfolgreich aktiviert! Die ersten Messwerte sollten in eingigen Minuten verfügbar sein.</string>
+    <string name="on_patch_activation_failure">Patch konnte nicht aktiviert werden! Ein Fehler ist beim Aktivieren des Patches aufgetreten. Beachte den SW Status des Patches</string>
+</resources>

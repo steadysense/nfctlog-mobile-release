@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name" translatable="false">NfcTlog Demo App</string>
+    <string name="nfc_not_available">NFC is not available. You cannot test SteadySense patches with this device. Nevertheless, you can still run UI tests with fake patches.</string>
+    <string name="nfc_disabled">NFC disabled</string>
+    <string name="nfc_can_be_activated">The NFC function on the device is disabled. You can activate it in the settings.</string>
+
+    <string name="nfc_available_launch_text">NFC is available. Hold your device close to a SteadySense patch!</string>
+    <string name="nfc_tag_not_supported">Unsupported NFC tag: An Exception occurred while processing this NFC tag. Try again with another NFC tag.</string>
+    <string name="open_settings">Open settings</string>
+
+    <string name="on_patch_activated">Patch activation succeeded! Expecting SW state transitions within the next seconds.... You should be able to read the first measurement in 1 minute.</string>
+    <string name="on_patch_activation_failure">Failed to activate the patch! An Exception occurred during the activation protocol. Scroll down to the bottom to see the current state of the patch.</string>
+</resources>
