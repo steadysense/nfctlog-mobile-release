@@ -2,8 +2,8 @@
 import PackageDescription
 
 // BEGIN KMMBRIDGE VARIABLES BLOCK (do not edit)
-let remoteKotlinUrl = "https://github.com/steadysense/nfctlog-mobile-release/releases/download/0.5.0-dev.26062901/nfctlog-kmmbridge-0.5.0-dev.26062901.zip"
-let remoteKotlinChecksum = "a73174e8ac62364bb7e63ea5813cb9b44039a7bb9c821bd28e782427fe15cf82"
+let remoteKotlinUrl = "https://github.com/steadysense/nfctlog-mobile-release/releases/download/0.4.4/nfctlog-kmmbridge-0.4.4.zip"
+let remoteKotlinChecksum = "c9d9f1e1eec830e39e015e68b17d134309e3ec812f678ce60b450bbe7729860b"
 let packageName = "nfctlog"
 // END KMMBRIDGE BLOCK
 
