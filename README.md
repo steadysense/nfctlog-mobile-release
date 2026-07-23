@@ -326,7 +326,7 @@ A single temperature measurement — the element type of `TlogRecord.temperature
 
 | Property | Type | Description |
 |---|---|---|
-| `index` | `Int` | Position of this measurement, starting at 0 and counting up until the first ring-buffer overflow. Combine with `firstTimestamp` and `measureIntervalSeconds` to derive the wall-clock time (`firstTimestamp + index * measureIntervalSeconds`). |
+| `index` | `Int` | Absolute measurement number since activation, starting at 0. It keeps increasing across ring-buffer overflows — after an overflow only the most recent measurements are retained, so the lowest `index` present is `measureCount - bufferSize` rather than 0. Combine with `firstTimestamp` and `measureIntervalSeconds` to derive the wall-clock time (`firstTimestamp + index * measureIntervalSeconds`); this holds for every retained sample regardless of overflow. |
 | `temperature` | `Double` | Measured temperature in °C. |
 | `valid` | `Boolean` | `false` if an NFC field was detected during the measurement (the value may be disturbed). |
 | `adc` | `UShort?` | Raw value from the patch's analog-to-digital converter, `null` if not available. |
