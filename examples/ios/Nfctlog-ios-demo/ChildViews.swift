@@ -99,40 +99,26 @@ struct BottomBox: View {
 
     }
     
+    private func actionButton(_ title: String, color: Color, id: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title)
+                .foregroundColor(Color.white)
+                .frame(minWidth: 0, maxWidth: .infinity)
+                .padding(.vertical, 10)
+                .background(color)
+        }.accessibility(identifier: id)
+    }
+
     var body: some View {
-        VStack {
+        VStack(spacing: 8) {
             if (canBeReseted()) {
-                Button(action: self.onResetPatchClicked) {
-                    Text("Reset Patch")
-                        .foregroundColor(Color.white)
-                        .frame(minWidth: 0, maxWidth: .infinity)
-                }.accessibility(identifier: "resetPatchButton")
-                    .padding()
-                    .background(Color.red)
+                actionButton("Reset Patch", color: .red, id: "resetPatchButton", action: self.onResetPatchClicked)
             }
             if (canBeActivated()) {
-                Button(action: self.onActivatePatchClicked) {
-                    Text("Activate Patch")
-                        .foregroundColor(Color.white)
-                        .frame(minWidth: 0, maxWidth: .infinity)
-                }.accessibility(identifier: "activatePatchButton")
-                    .padding()
-                    .background(Color.yellow)
+                actionButton("Activate Patch", color: .yellow, id: "activatePatchButton", action: self.onActivatePatchClicked)
             }
-            Button(action: self.onReadPatchClicked) {
-                Text("Read Patch")
-                    .foregroundColor(Color.white)
-                    .frame(minWidth: 0, maxWidth: .infinity)
-            }.accessibility(identifier: "readPatchButton")
-                .background(Color.green)
-                .padding()
-            Button(action: self.onReadOrActivatePatchClicked) {
-                Text("Read or Activate Patch")
-                    .foregroundColor(Color.white)
-                    .frame(minWidth: 0, maxWidth: .infinity)
-            }.accessibility(identifier: "readOrActivatePatchButton")
-                .background(Color.green)
-                .padding()
+            actionButton("Read Patch", color: .green, id: "readPatchButton", action: self.onReadPatchClicked)
+            actionButton("Read or Activate Patch", color: .green, id: "readOrActivatePatchButton", action: self.onReadOrActivatePatchClicked)
         }
     }
 }

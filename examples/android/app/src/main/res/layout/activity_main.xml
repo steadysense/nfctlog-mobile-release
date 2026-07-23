@@ -75,6 +75,12 @@
 
         </LinearLayout>
 
+        <ScrollView
+            android:id="@+id/configScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
         <LinearLayout
             android:id="@+id/activationConfigContainer"
             android:layout_width="match_parent"
@@ -112,6 +118,107 @@
                     android:layout_weight="1"
                     android:checked="true"
                     android:text="UVLO" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/deltaCodingSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="false"
+                    android:text="Delta Coding (SW v5.0+)" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/deltaCodingDynamicSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="false"
+                    android:text="Delta Coding: Dynamic Reference" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:maxLines="1"
+                        android:text="Delta Shift (1-4)"
+                        android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:hintEnabled="false">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/deltaCodingShiftEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="number"
+                            android:selectAllOnFocus="true"
+                            android:singleLine="true"
+                            android:text="1"
+                            android:textAlignment="textEnd" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/deltaCodingShiftInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingBottom="4dp"
+                    android:text="Step = 2^shift ADC counts (resolution / span around ref):\n  1 → ~0.02°C / ±2.5°C    2 → ~0.04°C / ±5°C\n  3 → ~0.08°C / ±10°C    4 → ~0.15°C / ±20°C"
+                    android:textSize="11sp"
+                    android:textStyle="italic" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:maxLines="1"
+                        android:text="Delta Ref (°C)"
+                        android:textAppearance="@android:style/TextAppearance.DeviceDefault" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        app:hintEnabled="false">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/deltaCodingReferenceEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="numberSigned|numberDecimal"
+                            android:selectAllOnFocus="true"
+                            android:singleLine="true"
+                            android:text="25"
+                            android:textAlignment="textEnd" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/deltaCodingInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="6dp"
+                    android:text="Delta coding only applies to SW v5.0+ patches. Instead of a full 16-bit value, each measurement is stored as a signed 8-bit delta relative to a reference.\n\nReference (°C): baseline the deltas are measured against — use a value near the first expected measurement. Converted to an ADC value with a nominal calibration, so it is approximate.\n\nDynamic reference encodes each delta against the previous value (limits per-sample change) instead of the fixed reference (limits absolute distance from it)."
+                    android:textSize="11sp"
+                    android:textStyle="italic" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -183,11 +290,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
         </LinearLayout>
+        </ScrollView>
 
         <ScrollView
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
             android:background="@android:color/white">

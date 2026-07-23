@@ -19,6 +19,10 @@ class UiActivationConfig(
     var enableRingBuffer: Boolean,
     var enableUVLO: Boolean,
     var userData: ImmutableByteArray,
+    var deltaCodingEnabled: Boolean = false,
+    var deltaCodingDynamicMode: Boolean = false,
+    var deltaCodingShift: Int = 1,
+    var deltaCodingReferenceCelsius: String = "25",
 ) : RangeSlider.OnChangeListener,
     CompoundButton.OnCheckedChangeListener,
     TextWatcher {
@@ -38,6 +42,16 @@ class UiActivationConfig(
             R.id.uvloSwitch -> {
                 Log.i(TAG, "UI: UVLO changed to $isChecked")
                 enableUVLO = isChecked
+            }
+
+            R.id.deltaCodingSwitch -> {
+                Log.i(TAG, "UI: Delta coding changed to $isChecked")
+                deltaCodingEnabled = isChecked
+            }
+
+            R.id.deltaCodingDynamicSwitch -> {
+                Log.i(TAG, "UI: Delta coding dynamic mode changed to $isChecked")
+                deltaCodingDynamicMode = isChecked
             }
         }
     }
@@ -73,12 +87,29 @@ class UiActivationConfig(
     }
 
     fun build(): ActivationConfig {
+        // Delta coding (SW v5.0+): the user enters the reference in Celsius. We pass it straight
+        // through; the library converts it to ADC at activation using the chip's own IFX
+        // calibration (read just before), so no per-chip offset is introduced. A null reference
+        // disables delta coding in the start command.
+        val deltaReferenceCelsius: Double? = if (deltaCodingEnabled) {
+            deltaCodingReferenceCelsius.trim().toDoubleOrNull().also {
+                if (it == null) {
+                    Log.w(TAG, "Invalid delta-coding reference '$deltaCodingReferenceCelsius' C, disabling delta coding")
+                }
+            }
+        } else {
+            null
+        }
+
         return ActivationConfig(
             intervalSeconds.toInt(),
             enableRingBuffer = enableRingBuffer,
             enableUVLO = enableUVLO,
             lock = lock,
-            userData
+            userData = userData,
+            deltaCodingReferenceTemperatureCelsius = deltaReferenceCelsius,
+            deltaCodingDynamicMode = deltaCodingDynamicMode,
+            deltaCodingShift = deltaCodingShift.coerceIn(1, 4),
         )
     }
 }

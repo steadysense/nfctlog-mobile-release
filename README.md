@@ -137,6 +137,17 @@ nfcHandler.read { patchData, error ->
 val config = ActivationConfig(measureIntervalSeconds = 900, enableRingBuffer = true)
 nfcHandler.activate(config) { patchData, error -> }
 
+// Activate with delta-coding (SW v5.0+): stores each sample as an 8-bit delta
+// around a reference temperature given in °C.
+val deltaConfig = ActivationConfig.withDeltaCoding(
+    measureIntervalSeconds = 900,
+    enableRingBuffer = true,
+    deltaReferenceTemperatureCelsius = 25.0,
+    deltaCodingDynamicMode = false,
+    deltaCodingShift = 2,
+)
+nfcHandler.activate(deltaConfig) { patchData, error -> }
+
 // Read, or activate if the patch has not been started yet
 nfcHandler.readOrActivate(config) { patchData, error -> }
 
@@ -173,6 +184,19 @@ let config = ActivationConfig(
     userData: nil
 )
 try session.activate(config: config) { patch, error in }
+
+// Activate with delta-coding (SW v5.0+): reference is given in °C.
+let deltaConfig = ActivationConfig.companion.withDeltaCoding(
+    measureIntervalSeconds: 900,
+    enableRingBuffer: true,
+    enableUVLO: true,
+    lock: false,
+    userData: nil,
+    deltaReferenceTemperatureCelsius: 25.0,
+    deltaCodingDynamicMode: false,
+    deltaCodingShift: 2
+)
+try session.activate(config: deltaConfig) { patch, error in }
 
 // Read, or activate if the patch has not been started yet
 try session.readOrActivateTag(config: config) { patch, error in }
@@ -233,6 +257,17 @@ Configuration applied to a patch during activation.
 | `enableUVLO` | `Boolean` | `true` | Enable under-voltage lockout. Disable for sub-10 °C environments. |
 | `lock` | `Boolean` | `false` | Lock the activation-timestamp memory area after activation. |
 | `userData` | `ImmutableByteArray?` | `null` | Optional binary payload stored on the patch. Size must be a multiple of 16 bytes and at most 64 bytes. |
+| `deltaCodingReferenceTemperatureCelsius` | `Double?` | `null` | **SW v5.0+.** Reference temperature (°C) for delta-coding. When set, each measurement is stored as a signed 8-bit delta relative to this reference instead of a full 16-bit value. `null` disables delta-coding. The value is converted to the chip-specific ADC reference at activation using the patch's own IFX calibration (read immediately before), so it means this exact temperature on every chip with no per-chip offset. |
+| `deltaCodingDynamicMode` | `Boolean` | `false` | **SW v5.0+.** When `true`, each delta is encoded relative to the *previous* measurement (limits per-sample change) rather than the fixed reference (limits absolute distance from it). Only relevant when delta-coding is enabled. |
+| `deltaCodingShift` | `Int` | `1` | **SW v5.0+.** Quantization shift applied to each stored delta; valid values `1..4`. Step = `2^shift` ADC counts, trading resolution for span around the reference (`1` → ~0.02 °C / ±2.5 °C … `4` → ~0.15 °C / ±20 °C). Only relevant when delta-coding is enabled. |
+
+Delta-coding (SW v5.0+) is easiest to construct with the `ActivationConfig.withDeltaCoding(...)`
+factory, which takes the reference as a Celsius temperature (see the usage examples above). The
+`isDeltaCodingEnabled` property is `true` whenever `deltaCodingReferenceTemperatureCelsius` is set.
+
+> **Note:** Delta-coding requires SW v5.0+ firmware. On patches running SW 4.x (or earlier) the
+> delta-coding options have no effect — the patch is activated normally and stores full-value
+> measurements regardless.
 
 Serializable: `ActivationConfig.fromJson(json)` / `.toJson()`.
 
@@ -276,6 +311,10 @@ Detailed content of a patch. Key fields:
 | `isReadyForActivation` | `Boolean` | `true` when the patch can be activated. |
 | `user_data` | `ImmutableByteArray` | Application data stored during activation. |
 | `recovery_count` | `Byte` | Number of successful analog-reset recovery events. |
+| `isDeltaCodingEnabled` | `Boolean` | **SW v5.0+.** `true` when the patch stores measurements as delta-coded values. |
+| `isDeltaCodingDynamicMode` | `Boolean` | **SW v5.0+.** `true` when deltas are encoded against the previous value rather than the fixed reference. |
+| `deltaCodingReferenceCelsius` | `Double?` | **SW v5.0+.** The delta-coding reference decoded back to °C (`null` when delta-coding is off). |
+| `deltaCodingBitWidth` | `Int?` | **SW v5.0+.** Quantization shift in effect (`null` when delta-coding is off). |
 
 Serializable: `TlogRecord.fromJson(json)` / `.toJson()`.
 

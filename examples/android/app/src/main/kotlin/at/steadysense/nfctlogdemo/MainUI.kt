@@ -54,6 +54,10 @@ class MainUI(val ac: MainActivity, val nfcHandler: NfcHandler) {
     private lateinit var lockSwitch: SwitchCompat
     private lateinit var ringbufferSwitch: SwitchCompat
     private lateinit var uvloSwitch: SwitchCompat
+    private lateinit var deltaCodingSwitch: SwitchCompat
+    private lateinit var deltaCodingDynamicSwitch: SwitchCompat
+    private lateinit var deltaCodingShiftInput: TextView
+    private lateinit var deltaCodingReferenceInput: TextView
     private lateinit var statusBar: TextView
     private lateinit var activationConfigContainer: LinearLayout
     private lateinit var userDataTextInput: TextView
@@ -72,6 +76,10 @@ class MainUI(val ac: MainActivity, val nfcHandler: NfcHandler) {
         lockSwitch = ac.findViewById(R.id.lockSwitch)
         ringbufferSwitch = ac.findViewById(R.id.ringbufferSwitch)
         uvloSwitch = ac.findViewById(R.id.uvloSwitch)
+        deltaCodingSwitch = ac.findViewById(R.id.deltaCodingSwitch)
+        deltaCodingDynamicSwitch = ac.findViewById(R.id.deltaCodingDynamicSwitch)
+        deltaCodingShiftInput = ac.findViewById(R.id.deltaCodingShiftEditText)
+        deltaCodingReferenceInput = ac.findViewById(R.id.deltaCodingReferenceEditText)
         intervalSlider = ac.findViewById(R.id.intervalSlider)
         userDataTextInput = ac.findViewById(R.id.userDataEditText)
         activationConfigContainer = ac.findViewById(R.id.activationConfigContainer)
@@ -97,7 +105,11 @@ class MainUI(val ac: MainActivity, val nfcHandler: NfcHandler) {
             enableRingBuffer = ringbufferSwitch.isChecked,
             enableUVLO = uvloSwitch.isChecked,
             lock = lockSwitch.isChecked,
-            userData = ImmutableByteArray.fromASCIIPadded(userDataTextInput.text.toString())
+            userData = ImmutableByteArray.fromASCIIPadded(userDataTextInput.text.toString()),
+            deltaCodingEnabled = deltaCodingSwitch.isChecked,
+            deltaCodingDynamicMode = deltaCodingDynamicSwitch.isChecked,
+            deltaCodingShift = deltaCodingShiftInput.text.toString().toIntOrNull() ?: 1,
+            deltaCodingReferenceCelsius = deltaCodingReferenceInput.text.toString(),
         )
 
         intervalSlider.values = arrayOf(3f).toMutableList()
@@ -174,6 +186,14 @@ class MainUI(val ac: MainActivity, val nfcHandler: NfcHandler) {
         lockSwitch.setOnCheckedChangeListener(activationConfig)
         ringbufferSwitch.setOnCheckedChangeListener(activationConfig)
         uvloSwitch.setOnCheckedChangeListener(activationConfig)
+        deltaCodingSwitch.setOnCheckedChangeListener(activationConfig)
+        deltaCodingDynamicSwitch.setOnCheckedChangeListener(activationConfig)
+        deltaCodingShiftInput.addTextChangedListener { editable ->
+            activationConfig?.deltaCodingShift = editable?.toString()?.toIntOrNull() ?: 1
+        }
+        deltaCodingReferenceInput.addTextChangedListener { editable ->
+            activationConfig?.deltaCodingReferenceCelsius = editable?.toString() ?: "25"
+        }
         setMainText(ac.getString(R.string.nfc_available_launch_text), largeText = true)
         showNfcAvailableUI()
     }
@@ -229,6 +249,20 @@ class MainUI(val ac: MainActivity, val nfcHandler: NfcHandler) {
         }
         if (tlogRecord != null) {
             sb.append(tlogRecord.format())
+            if (tlogRecord.isDeltaCodingEnabled) {
+                sb.appendLine()
+                sb.appendLine(
+                    "Delta Coding: ${if (tlogRecord.isDeltaCodingDynamicMode) "Dynamic" else "Static"} reference"
+                )
+                sb.appendLine(
+                    String.format(
+                        Locale.US,
+                        "Delta Reference: %.2f°",
+                        tlogRecord.deltaCodingReferenceCelsius ?: Double.NaN
+                    )
+                )
+                sb.appendLine("Delta Shift: ${tlogRecord.deltaCodingBitWidth}")
+            }
             tlogRecord.temperatures.forEach {
                 val s = String.format(
                     Locale.US,
