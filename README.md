@@ -320,6 +320,19 @@ Serializable: `TlogRecord.fromJson(json)` / `.toJson()`.
 
 ---
 
+### `TlogValue`
+
+A single temperature measurement — the element type of `TlogRecord.temperatures`.
+
+| Property | Type | Description |
+|---|---|---|
+| `index` | `Int` | Position of this measurement, starting at 0 and counting up until the first ring-buffer overflow. Combine with `firstTimestamp` and `measureIntervalSeconds` to derive the wall-clock time (`firstTimestamp + index * measureIntervalSeconds`). |
+| `temperature` | `Double` | Measured temperature in °C. |
+| `valid` | `Boolean` | `false` if an NFC field was detected during the measurement (the value may be disturbed). |
+| `adc` | `UShort?` | Raw value from the patch's analog-to-digital converter, `null` if not available. |
+
+---
+
 ### `PatchState`
 
 | Value | Description |
