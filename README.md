@@ -4,6 +4,15 @@ Android and iOS library for integrating SteadySense temperature sensor patches i
 
 The library is written in Kotlin Multiplatform. The Android artifacts (AAR) are published via GitHub Packages, and the iOS XCFramework is distributed via Swift Package Manager.
 
+## Supported chip software versions
+
+| Chip SW | Supported since | Notes |
+|---|---|---|
+| 3.x, 4.x | — | Each measurement is stored as a full 16-bit value. |
+| 5.x | 0.5.0 | Adds optional delta-coding (see [`ActivationConfig`](#activationconfig)). Without delta-coding, 5.x patches behave like 4.x. |
+
+Patches running other versions are rejected with an error.
+
 ---
 
 ## Installation
@@ -138,11 +147,12 @@ val config = ActivationConfig(measureIntervalSeconds = 900, enableRingBuffer = t
 nfcHandler.activate(config) { patchData, error -> }
 
 // Activate with delta-coding (SW v5.0+): stores each sample as an 8-bit delta
-// around a reference temperature given in °C.
+// around a reference temperature given in °C. With shift 2 the usable range is
+// about ±5 °C around the reference, so pick a value close to the expected temperatures.
 val deltaConfig = ActivationConfig.withDeltaCoding(
     measureIntervalSeconds = 900,
     enableRingBuffer = true,
-    deltaReferenceTemperatureCelsius = 25.0,
+    deltaReferenceTemperatureCelsius = 36.0,
     deltaCodingDynamicMode = false,
     deltaCodingShift = 2,
 )
@@ -181,18 +191,22 @@ let config = ActivationConfig(
     enableRingBuffer: true,
     enableUVLO: true,
     lock: false,
-    userData: nil
+    userData: nil,
+    deltaCodingReferenceTemperatureCelsius: nil,
+    deltaCodingDynamicMode: false,
+    deltaCodingShift: 1
 )
 try session.activate(config: config) { patch, error in }
 
 // Activate with delta-coding (SW v5.0+): reference is given in °C.
+// Note: Kotlin default arguments are not available from Swift, so all arguments must be passed.
 let deltaConfig = ActivationConfig.companion.withDeltaCoding(
     measureIntervalSeconds: 900,
     enableRingBuffer: true,
     enableUVLO: true,
     lock: false,
     userData: nil,
-    deltaReferenceTemperatureCelsius: 25.0,
+    deltaReferenceTemperatureCelsius: 36.0,
     deltaCodingDynamicMode: false,
     deltaCodingShift: 2
 )
@@ -253,12 +267,12 @@ Configuration applied to a patch during activation.
 | Property | Type | Default | Description |
 |---|---|---|---|
 | `measureIntervalSeconds` | `Int` | — | Interval between successive measurements in seconds. Values below 30 s mark measurements as invalid (chip heating). |
-| `enableRingBuffer` | `Boolean` | — | When `true`, old measurements are overwritten once the buffer is full (920 entries for SW v3.x). When `false`, the patch stops after 920 measurements. |
+| `enableRingBuffer` | `Boolean` | — | When `true`, old measurements are overwritten once the buffer is full. When `false`, the patch stops once the buffer is full. Capacity is 920 measurements for SW v3.x/v4.x (and v5.x without delta-coding); with delta-coding each measurement takes 1 byte instead of 2, so more measurements fit. |
 | `enableUVLO` | `Boolean` | `true` | Enable under-voltage lockout. Disable for sub-10 °C environments. |
 | `lock` | `Boolean` | `false` | Lock the activation-timestamp memory area after activation. |
 | `userData` | `ImmutableByteArray?` | `null` | Optional binary payload stored on the patch. Size must be a multiple of 16 bytes and at most 64 bytes. |
 | `deltaCodingReferenceTemperatureCelsius` | `Double?` | `null` | **SW v5.0+.** Reference temperature (°C) for delta-coding. When set, each measurement is stored as a signed 8-bit delta relative to this reference instead of a full 16-bit value. `null` disables delta-coding. The value is converted to the chip-specific ADC reference at activation using the patch's own IFX calibration (read immediately before), so it means this exact temperature on every chip with no per-chip offset. |
-| `deltaCodingDynamicMode` | `Boolean` | `false` | **SW v5.0+.** When `true`, each delta is encoded relative to the *previous* measurement (limits per-sample change) rather than the fixed reference (limits absolute distance from it). Only relevant when delta-coding is enabled. |
+| `deltaCodingDynamicMode` | `Boolean` | `false` | **SW v5.0+.** When `true`, each delta is encoded relative to the *previous* measurement (limits per-sample change) rather than the fixed reference (limits absolute distance from it). Only relevant when delta-coding is enabled. **Not recommended for production** — see [Known limitations](#known-limitations-of-dynamic-mode). |
 | `deltaCodingShift` | `Int` | `1` | **SW v5.0+.** Quantization shift applied to each stored delta; valid values `1..4`. Step = `2^shift` ADC counts, trading resolution for span around the reference (`1` → ~0.02 °C / ±2.5 °C … `4` → ~0.15 °C / ±20 °C). Only relevant when delta-coding is enabled. |
 
 Delta-coding (SW v5.0+) is easiest to construct with the `ActivationConfig.withDeltaCoding(...)`
@@ -268,6 +282,20 @@ factory, which takes the reference as a Celsius temperature (see the usage examp
 > **Note:** Delta-coding requires SW v5.0+ firmware. On patches running SW 4.x (or earlier) the
 > delta-coding options have no effect — the patch is activated normally and stores full-value
 > measurements regardless.
+
+#### Known limitations of dynamic mode
+
+In dynamic mode the chip keeps its running reference only in volatile memory; only the original
+reference can be read over NFC. Absolute temperatures are therefore reconstructed by adding up every
+delta since activation. This produces **wrong temperatures without any error** in two cases:
+
+- **Ring buffer wrap:** once the oldest deltas are overwritten, all reconstructed values are offset
+  by an unknown amount.
+- **Recovery events:** after an analog-reset recovery the chip restarts from the original
+  reference, while the reconstruction keeps adding up. All values after the event are offset.
+
+Use static mode (`deltaCodingDynamicMode = false`) for production. If you use dynamic mode, disable
+the ring buffer and only trust the data while `TlogRecord.recovery_count == 0`.
 
 Serializable: `ActivationConfig.fromJson(json)` / `.toJson()`.
 
