@@ -1,7 +1,7 @@
 # nfctlog — Android example
 
 A minimal, runnable Android app that integrates the published SteadySense `nfctlog` library
-(`at.steadysense.nfctlog:nfctlog-android:0.5.0`) to read and activate temperature patches over NFC.
+(`at.steadysense.nfctlog:nfctlog-android:0.5.1`) to read and activate temperature patches over NFC.
 
 This is a standalone Gradle project — it depends on the **published** AAR, not on the library
 source. Use it as a reference for wiring `nfctlog` into your own app.
@@ -37,12 +37,12 @@ Then open the app and tap a SteadySense patch. The buttons map to the library co
 
 - **Repository + dependency** — `settings.gradle.kts` adds the GitHub Packages Maven repo
   (`https://maven.pkg.github.com/steadysense/nfctlog-mobile-release`) with the credentials above,
-  and `app/build.gradle.kts` declares `implementation("at.steadysense.nfctlog:nfctlog-android:0.5.0")`.
+  and `app/build.gradle.kts` declares `implementation("at.steadysense.nfctlog:nfctlog-android:0.5.1")`.
 - **NFC setup** — `app/src/main/AndroidManifest.xml` requests `android.permission.NFC` and filters
   the `NDEF_DISCOVERED` intent; `MainActivity` creates an `NfcHandler` and forwards the
   lifecycle/intent callbacks.
 
 ## Version
 
-Pinned to `0.5.0`. The activation config screen exposes the SW v5.0 delta-coding options
+Pinned to `0.5.1`. The activation config screen exposes the SW v5.0 delta-coding options
 (enable, dynamic reference, shift 1-4, and reference temperature in Celsius).

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DB7A10012C90000000ADAE04 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DB7A10022C90000000ADAE04 /* Localizable.strings */; };
 		B822083A248806CF00916F5D /* ChildViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8220839248806CF00916F5D /* ChildViews.swift */; };
 		B8ACC0312487C78500B3C0FA /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B8ACC0302487C78500B3C0FA /* Default-568h@2x.png */; };
 		B8B628242488019E0066F2F8 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B628232488019E0066F2F8 /* AppState.swift */; };
@@ -29,6 +30,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		DB7A10032C90000000ADAE04 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = ../../steadytemp_translations/en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DB7A10042C90000000ADAE04 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = ../../steadytemp_translations/de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		DB7A10052C90000000ADAE04 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = ../../steadytemp_translations/pl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B8220839248806CF00916F5D /* ChildViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildViews.swift; sourceTree = "<group>"; };
 		B8ACC0302487C78500B3C0FA /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		B8ACC0322487CFC900B3C0FA /* Nfctlog-ios-demo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "Nfctlog-ios-demo.entitlements"; path = "nfctlog-ios-demo/Nfctlog-ios-demo.entitlements"; sourceTree = "<group>"; };
@@ -70,6 +74,7 @@
 				DB75C4B92C18ACD600ADAE04 /* nfctlog-mobile */,
 				B8ACC0322487CFC900B3C0FA /* Nfctlog-ios-demo.entitlements */,
 				B8ACC0302487C78500B3C0FA /* Default-568h@2x.png */,
+				DB7A10022C90000000ADAE04 /* Localizable.strings */,
 				B941039324741306003761B7 /* Nfctlog-ios-demo */,
 				B941039224741306003761B7 /* Products */,
 				B94103C4247506FD003761B7 /* Frameworks */,
@@ -174,6 +179,8 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
+				pl,
 			);
 			mainGroup = B941038824741306003761B7;
 			packageReferences = (
@@ -196,6 +203,7 @@
 			files = (
 				B941039B24741308003761B7 /* Assets.xcassets in Resources */,
 				B8ACC0312487C78500B3C0FA /* Default-568h@2x.png in Resources */,
+				DB7A10012C90000000ADAE04 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,6 +245,19 @@
 			targetProxy = B94103A824741309003761B7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		DB7A10022C90000000ADAE04 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				DB7A10032C90000000ADAE04 /* en */,
+				DB7A10042C90000000ADAE04 /* de */,
+				DB7A10052C90000000ADAE04 /* pl */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		B94103B924741309003761B7 /* Debug */ = {
@@ -489,7 +510,7 @@
 			repositoryURL = "https://github.com/steadysense/nfctlog-mobile-release";
 			requirement = {
 				kind = exactVersion;
-				version = 0.4.3;
+				version = 0.5.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

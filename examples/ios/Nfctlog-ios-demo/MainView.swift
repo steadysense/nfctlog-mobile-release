@@ -61,6 +61,9 @@ struct MainView: View {
             try session.reset(){ result, error in
                 if(error != nil) {
                     print("Error: \(String(describing: error?.message))")
+                } else if(result == nil) {
+                    // Session cancelled by the user before the reset finished.
+                    print("Reset cancelled")
                 } else {
                     print("Reset successful")
                 }

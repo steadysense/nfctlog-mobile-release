@@ -94,6 +94,10 @@ Before using NFC, complete the following setup:
 
 1. Add the **Near Field Communication Tag Reader Session Formats** entitlement to your app's entitlements file.
 2. Set `NFCReaderUsageDescription` in `Info.plist`.
+3. Add the translations: drag the [`steadytemp_translations`](steadytemp_translations) folder (en, de, pl)
+   into your Xcode project and add it to your app target. The library looks up the NFC dialog and error texts
+   in your app's `Localizable.strings`; without them the dialog shows raw keys such as `nfc_reset_title`.
+   Android needs no extra step, the texts ship inside the AAR.
 
 For authentication with GitHub Packages / Swift Package Manager, follow the [KMMBridge SPM authentication guide](https://kmmbridge.touchlab.co/docs/spm/IOS_SPM#artifact-authentication).
 
@@ -218,6 +222,21 @@ try session.readOrActivateTag(config: config) { patch, error in }
 // Reset
 try session.reset { patch, error in }
 ```
+
+---
+
+### Lost connection during a command
+
+The patch can briefly lose the NFC connection, most often during long write sequences such as a reset.
+Since 0.5.1 both platforms wait for the patch to be detected again and re-run the command automatically:
+
+- **iOS**: the NFC session restarts polling and re-runs the command.
+- **Android**: the command is re-run up to 10 times after a `TagLostException`. After an
+  `IOException: Transceive failed` it is retried only once in a row, because Android reports a patch that rejects
+  a write (e.g. a locked patch) the same way.
+
+A reset continues where it stopped instead of starting over. The user only has to keep the phone on the patch;
+cancelling the NFC dialog stops the retries.
 
 ---
 

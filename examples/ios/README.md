@@ -17,21 +17,24 @@ downloads the XCFramework without authentication.
 ## Run
 
 1. Open `Nfctlog-mobile-demo.xcodeproj`.
-2. Let Xcode resolve packages (it pulls `nfctlog` `0.5.0` from
+2. Let Xcode resolve packages (it pulls `nfctlog` `0.5.1` from
    `https://github.com/steadysense/nfctlog-mobile-release`).
 3. Select your development team under **Signing & Capabilities**.
 4. Run on a connected iPhone and tap a SteadySense patch.
 
-## How it integrates (the two pieces that matter)
+## How it integrates (the pieces that matter)
 
 - **SPM dependency** — the project references the package remotely at
-  `https://github.com/steadysense/nfctlog-mobile-release`, pinned to `0.5.0`
+  `https://github.com/steadysense/nfctlog-mobile-release`, pinned to `0.5.1`
   (`Add Package Dependency…` in Xcode does the same thing).
 - **NFC setup** — `Nfctlog-ios-demo.entitlements` has the *Near Field Communication Tag Reader
   Session Formats* entitlement and `Info.plist` sets `NFCReaderUsageDescription`. `MainView` drives
   the library through `CardReaderSessionIOS` (`readTag`, `readOrActivateTag`, `activate`, `reset`).
+- **Translations** — the NFC dialog and error texts are looked up in the app's `Localizable.strings`.
+  The project bundles `../../steadytemp_translations` (en, de, pl) as a localized
+  `Localizable.strings`; without it the dialog shows raw keys such as `nfc_reset_title`.
 
 ## Version
 
-Pinned to `0.5.0`. `MainView` exposes the SW v5.0 delta-coding activation options
+Pinned to `0.5.1`. `MainView` exposes the SW v5.0 delta-coding activation options
 (enable, dynamic reference, shift, and reference temperature in °C).
