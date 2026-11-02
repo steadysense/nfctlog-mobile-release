@@ -79,7 +79,12 @@ struct MainView: View {
             self.appState = .ReadSession
             try session.readTag(){ patch, error in
                 guard patch != nil else {
-                    self.appState = .Error(error: (error?.message)!)
+                    // (nil, nil) means the user cancelled the NFC session.
+                    if let error = error {
+                        self.appState = .Error(error: error.message ?? String(describing: error))
+                    } else {
+                        self.appState = .Idle
+                    }
                     return
                 }
                 print("Record: \(String(describing: patch?.record.format()))")
@@ -99,7 +104,12 @@ struct MainView: View {
             let config = buildConfig()
             try session.readOrActivateTag(config: config){ patch, error in
                 guard patch != nil else {
-                    self.appState = .Error(error: (error?.message)!)
+                    // (nil, nil) means the user cancelled the NFC session.
+                    if let error = error {
+                        self.appState = .Error(error: error.message ?? String(describing: error))
+                    } else {
+                        self.appState = .Idle
+                    }
                     return
                 }
                 print("Record: \(String(describing: patch?.record.format()))")
@@ -120,8 +130,13 @@ struct MainView: View {
             let config = buildConfig()
             print("Just before executing activate command")
             try session.activate(config: config){ result, error in
-                if(error != nil) {
-                    print("Error: \(String(describing: error?.message))")
+                if let error = error {
+                    print("Error: \(String(describing: error.message))")
+                    self.appState = .Error(error: error.message ?? String(describing: error))
+                } else if(result == nil) {
+                    // Session cancelled by the user before the activation finished.
+                    print("Activation cancelled")
+                    self.appState = .Idle
                 } else {
                     print("Activation successful")
                     self.appState = .ActivateSuccess
