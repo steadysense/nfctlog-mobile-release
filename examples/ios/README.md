@@ -36,5 +36,7 @@ downloads the XCFramework without authentication.
 
 ## Version
 
-Pinned to `0.5.1`. `MainView` exposes the SW v5.0 delta-coding activation options
-(enable, dynamic reference, shift, and reference temperature in °C).
+Pinned to `0.5.1`. The *Activation settings* panel (`ActivationSettingsView` in `ChildViews.swift`)
+exposes the same activation parameters as the Android example: measurement interval, ring buffer,
+UVLO, lock, ASCII user data (max 64 bytes), and the SW v5.0 delta-coding options (enable, dynamic
+reference, shift, and reference temperature in °C).
